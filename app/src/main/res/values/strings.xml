@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">EasyRuntimePermission</string>
+
+    <string name="allow">Allow</string>
+    <string name="deny">Deny</string>
+    <string name="camera_pemission_never_ask">Camera permission was denied with never ask again. Please allow permission manually!!</string>
+    <string name="camera_permission_denied">Camera permission denied by user</string>
+    <string name="camera_permission_rational">Camera permission is needed to show the camera preview.</string>
 </resources>

@@ -4,40 +4,64 @@ package com.shaz.library.erp;
  * Created by ${Shahbaz} on 19-07-2017.
  */
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Process;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.AppOpsManagerCompat;
 import android.support.v4.util.SimpleArrayMap;
 
-import java.util.ArrayList;
-
 import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 
 public final class RuntimePermissionUtils {
+
+    /*public enum Permission{
+        Storage, Contact, Location, Sms, Phone, MicroPhone, Camera, Calendar, BodySensor
+
+        private String[] get(){
+            switch (this){
+                case Storage:
+                    return StoragePermission;
+                case Contact:
+                    return ContactPermission;
+                case Location:
+                    return LocationPermission;
+                case Sms:
+                    return SmsPermission;
+                case Phone:
+                    return PhonePermission;
+                case MicroPhone:
+                    return MicroPhonePermission;
+                case Camera:
+                    return CameraPermission;
+                case Calendar:
+                    return CalendarPermission;
+                case BodySensor:
+                    return BodySensorPermission;
+            }
+            return null;
+        }
+    }*/
+
     // Map of dangerous permissions introduced in later framework versions.
     // Used to conditionally bypass permission-hold checks on older devices.
     private static final SimpleArrayMap<String, Integer> MIN_SDK_PERMISSIONS;
 
-    public static final String[] allPermissions = {android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-            , android.Manifest.permission.READ_CONTACTS, android.Manifest.permission.WRITE_CONTACTS, android.Manifest.permission.GET_ACCOUNTS
-            , android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION
-            , android.Manifest.permission.READ_PHONE_STATE, android.Manifest.permission.READ_CALL_LOG, android.Manifest.permission.PROCESS_OUTGOING_CALLS
-            , android.Manifest.permission.SEND_SMS, android.Manifest.permission.READ_SMS, android.Manifest.permission.RECEIVE_SMS};
-
-    public static final String[] compulStorageCntctPerm = {android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-            , android.Manifest.permission.READ_CONTACTS, android.Manifest.permission.WRITE_CONTACTS};
-
-    public static final String[] storagePermission = {android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
-    public static final String[] contactPermission = {android.Manifest.permission.READ_CONTACTS, android.Manifest.permission.WRITE_CONTACTS, android.Manifest.permission.GET_ACCOUNTS};
-    public static final String[] locationPermission = {android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION};
-    public static final String[] smsPermission = {android.Manifest.permission.SEND_SMS, android.Manifest.permission.READ_SMS, android.Manifest.permission.RECEIVE_SMS};
-    public static final String[] phonePermission = {android.Manifest.permission.READ_PHONE_STATE, android.Manifest.permission.READ_CALL_LOG, android.Manifest.permission.PROCESS_OUTGOING_CALLS, android.Manifest.permission.CALL_PHONE};
-    public static final String[] microPhonePermission = {android.Manifest.permission.RECORD_AUDIO};
-    public static final String[] cameraPermission = {android.Manifest.permission.CAMERA};
+    public static final String[] StoragePermission = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    public static final String[] ContactPermission = {Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS, Manifest.permission.GET_ACCOUNTS};
+    public static final String[] LocationPermission = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+    public static final String[] SmsPermission = {Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.RECEIVE_WAP_PUSH, Manifest.permission.RECEIVE_MMS};
+    public static final String[] PhonePermission = {Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CALL_LOG, Manifest.permission.WRITE_CALL_LOG, Manifest.permission.PROCESS_OUTGOING_CALLS, Manifest.permission.ADD_VOICEMAIL, Manifest.permission.USE_SIP};
+    public static final String[] MicroPhonePermission = {Manifest.permission.RECORD_AUDIO};
+    public static final String[] CameraPermission = {Manifest.permission.CAMERA};
+    public static final String[] CalendarPermission = {Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR};
+    public static final String[] BodySensorPermission = {Manifest.permission.BODY_SENSORS};
 
     static {
         MIN_SDK_PERMISSIONS = new SimpleArrayMap<>(8);
@@ -166,68 +190,34 @@ public final class RuntimePermissionUtils {
         return false;
     }
 
-    public static ArrayList<String> getPermissionGroups(String[] permissions){
-        ArrayList<String> list = new ArrayList<>();
-        for(String s : permissions){
-            switch(s){
-                case android.Manifest.permission.READ_EXTERNAL_STORAGE:
-                case android.Manifest.permission.WRITE_EXTERNAL_STORAGE:
-                    if(!list.contains(STORAGE)) {
-                        list.add(STORAGE);
-                    }
-                    break;
-
-                case android.Manifest.permission.READ_CONTACTS:
-                case android.Manifest.permission.WRITE_CONTACTS:
-                case android.Manifest.permission.GET_ACCOUNTS:
-                    if(!list.contains(CONTACTS))
-                        list.add(CONTACTS);
-                    break;
-
-                case android.Manifest.permission.ACCESS_FINE_LOCATION:
-                case android.Manifest.permission.ACCESS_COARSE_LOCATION:
-                    if(!list.contains(LOCATION))
-                        list.add(LOCATION);
-                    break;
-
-                case android.Manifest.permission.READ_PHONE_STATE:
-                case android.Manifest.permission.READ_CALL_LOG:
-                case android.Manifest.permission.PROCESS_OUTGOING_CALLS:
-                case android.Manifest.permission.CALL_PHONE:
-                    if(!list.contains(PHONE))
-                        list.add(PHONE);
-                    break;
-
-                case android.Manifest.permission.SEND_SMS:
-                case android.Manifest.permission.READ_SMS:
-                case android.Manifest.permission.RECEIVE_SMS:
-                    if(!list.contains(SMS))
-                        list.add(SMS);
-                    break;
-
-
-                case android.Manifest.permission.RECORD_AUDIO:
-                    if(!list.contains(MICROPHONE))
-                        list.add(MICROPHONE);
-                    break;
-
-                case android.Manifest.permission.CAMERA:
-                    if(!list.contains(CAMERA))
-                        list.add(CAMERA);
-                    break;
-            }
+    /**
+     * Join multiple permissions and pass for request
+     */
+    public static String[] join(String[]... arrays) {
+        // calculate size of target array
+        int size = 0;
+        for (String[] array : arrays) {
+            size += array.length;
         }
-        return list;
+
+        // create list of appropriate size
+        java.util.List list = new java.util.ArrayList(size);
+
+        // add arrays
+        for (String[] array : arrays) {
+            list.addAll(java.util.Arrays.asList(array));
+        }
+
+        // create and return final array
+        return (String[]) list.toArray(new String[size]);
     }
 
-    //ToDo needs to push these strings in strings.xml
-    public static final String STORAGE = "Storage Permissions";
-    public static final String CONTACTS = "Contacts";
-    public static final String LOCATION = "Location Service";
-    public static final String PHONE = "Phone States";
-    public static final String SMS = "Sms Services";
-    public static final String MICROPHONE = "Microphone Service";
-    public static final String CAMERA = "Camera";
-
-
+    public static void openAppSettings(Context context) {
+        if (context == null)
+            return;
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.fromParts("package", context.getPackageName(), null));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
 }

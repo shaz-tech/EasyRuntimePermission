@@ -29,7 +29,7 @@ public final class RuntimePermissionHandler {
     }
 
     private static PermissionListener mPermissionListener;
-    private static final InvokeCommonPermissionPermissionRequest mInvokeCommonPermissionPermissionRequest = new InvokeCommonPermissionPermissionRequest();
+    private static final CommonRuntimePermissionRequest mCommonRuntimePermissionRequest = new CommonRuntimePermissionRequest();
     private static boolean mPendingRequest;
 
     public static synchronized void requestPermission(int requestCode, @NonNull Activity target, @NonNull PermissionListener listener, @NonNull String... permissions) {
@@ -51,7 +51,7 @@ public final class RuntimePermissionHandler {
             int[] grantResults = new int[permissionsMap.size()];
             for (int i = 0; i < grantResults.length; i++)
                 grantResults[i] = permissionsMap.get(permissions[i]);
-            mPermissionListener.onDenied(mInvokeCommonPermissionPermissionRequest, target, requestCode, permissions, grantResults, DENIED_REASON.PENDING);
+            mPermissionListener.onDenied(mCommonRuntimePermissionRequest, target, requestCode, permissions, grantResults, DENIED_REASON.PENDING);
             return;
         }
 
@@ -62,7 +62,7 @@ public final class RuntimePermissionHandler {
         } else {
             if (RuntimePermissionUtils.shouldShowRequestPermissionRationale(target, permissions)) {
                 if (mPermissionListener != null)
-                    mPermissionListener.onRationale(mInvokeCommonPermissionPermissionRequest, target, requestCode, permissions);
+                    mPermissionListener.onRationale(mCommonRuntimePermissionRequest, target, requestCode, permissions);
                 mPendingRequest = false;
             } else {
                 ActivityCompat.requestPermissions(target, permissions, requestCode);
@@ -84,14 +84,14 @@ public final class RuntimePermissionHandler {
             } else {
                 mPendingRequest = false;
                 if (mPermissionListener != null)
-                    mPermissionListener.onDenied(mInvokeCommonPermissionPermissionRequest, target, requestCode, permissions, grantResults, DENIED_REASON.USER);
+                    mPermissionListener.onDenied(mCommonRuntimePermissionRequest, target, requestCode, permissions, grantResults, DENIED_REASON.USER);
             }
         }
     }
 
-    private static final class InvokeCommonPermissionPermissionRequest implements PermissionRequest {
+    private static final class CommonRuntimePermissionRequest implements PermissionRequest {
 
-        private InvokeCommonPermissionPermissionRequest() {
+        private CommonRuntimePermissionRequest() {
         }
 
         @Override
@@ -107,7 +107,7 @@ public final class RuntimePermissionHandler {
             for (int i = 0; i < grantResults.length; i++)
                 grantResults[i] = permissionsMap.get(permissions[i]);
             if (mPermissionListener != null)
-                mPermissionListener.onDenied(mInvokeCommonPermissionPermissionRequest, target, requestCode, permissions, grantResults, DENIED_REASON.USER);
+                mPermissionListener.onDenied(mCommonRuntimePermissionRequest, target, requestCode, permissions, grantResults, DENIED_REASON.USER);
             mPendingRequest = false;
         }
     }
@@ -130,6 +130,7 @@ public final class RuntimePermissionHandler {
      * @param target
      * @param permissions
      * @param grantResults // Pass null if hasSelfPermissions check required
+     * @return hashmap
      */
     public static HashMap<String, Integer> getPermissionMap(@NonNull Activity target, String[] permissions, int[] grantResults) {
         if (permissions != null) {
