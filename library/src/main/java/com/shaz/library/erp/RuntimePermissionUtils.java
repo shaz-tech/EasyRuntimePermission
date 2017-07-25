@@ -1,24 +1,21 @@
-package com.shaz.library.erp;
-
 /**
- *
  * Copyright (c) 2017, Shahbaz2417
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at:
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *
- * Created by ${Shahbaz} on 19-07-2017.
- */
+ **/
+
+package com.shaz.library.erp;
 
 import android.Manifest;
 import android.app.Activity;
@@ -29,11 +26,18 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Process;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.AppOpsManagerCompat;
 import android.support.v4.util.SimpleArrayMap;
 
+import java.util.HashMap;
+
 import static android.support.v4.content.PermissionChecker.checkSelfPermission;
+
+/**
+ * Created by ${Shahbaz} on 19-07-2017.
+ */
 
 public final class RuntimePermissionUtils {
 
@@ -235,5 +239,35 @@ public final class RuntimePermissionUtils {
                 Uri.fromParts("package", context.getPackageName(), null));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+    }
+
+    /**
+     * To get HashMap of permissions
+     * Key as a permission
+     * Value as a grant/denied int Integer
+     *
+     * @param target
+     * @param permissions
+     * @param grantResults // Pass null if hasSelfPermissions check required
+     * @return hashmap
+     */
+    public static HashMap<String, Integer> getPermissionMap(@NonNull Activity target, String[] permissions, int[] grantResults) {
+        if (permissions != null) {
+            if (grantResults == null || grantResults.length != permissions.length) {
+                grantResults = new int[permissions.length];
+                for (int i = 0; i < grantResults.length; i++)
+                    grantResults[i] = hasSelfPermissions(target, permissions[i]) ? PackageManager.PERMISSION_GRANTED : PackageManager.PERMISSION_DENIED;
+            }
+            HashMap<String, Integer> map = new HashMap<>(permissions.length);
+            for (int i = 0; i < permissions.length; i++) {
+                try {
+                    map.put(permissions[i], grantResults[i]);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    continue;
+                }
+            }
+            return map;
+        }
+        return null;
     }
 }
