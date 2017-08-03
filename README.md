@@ -1,10 +1,17 @@
 # EasyRuntimePermission
 Simple listener-based API to handle runtime permissions.
 
-[![](https://jitpack.io/v/shahbaz2417/EasyRuntimePermission.svg)](https://jitpack.io/#shahbaz2417/EasyRuntimePermission)
+[![](https://jitpack.io/v/shaz-tech/EasyRuntimePermission.svg)](https://jitpack.io/#shaz-tech/EasyRuntimePermission)
 	
+	allprojects {
+    	repositories {
+    		...
+    		maven { url 'https://jitpack.io' }
+    	}
+    }
+    	
 	dependencies {
-	        compile 'com.github.shahbaz2417:EasyRuntimePermission:v1.0'
+	        compile 'com.github.shaz-tech:EasyRuntimePermission:1.0'
 	}
 
 ## With Xiaomi support
