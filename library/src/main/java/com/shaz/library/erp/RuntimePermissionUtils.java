@@ -148,9 +148,6 @@ public final class RuntimePermissionUtils {
 
     /**
      * Determine context has access to the given permission.
-     * <p>
-     * This is a workaround for RuntimeException of Parcel#readException.
-     * For more detail, check this issue https://github.com/hotchemi/PermissionsDispatcher/issues/107
      *
      * @param context    context
      * @param permission permission

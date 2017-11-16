@@ -23,6 +23,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
+    /**
+     * Called on button click
+     */
     public void openCamera(View view) {
         RuntimePermissionHandler.requestPermission(REQ_CODE_CAMERA_PERMISSION, this, mPermissionListener, RuntimePermissionUtils.CameraPermission);
     }
