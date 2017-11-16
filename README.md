@@ -30,7 +30,7 @@
 ## Usage
 ### Call
 ```java
-    /*Call when required to do some tast related to permission*/
+    /*Call when required to do some task related to permission*/
     RuntimePermissionHandler.requestPermission(YOUR_REQUEST_CODE, CURRENT_ACTIVITY, PERMISSION_LISTENER_INSTANCE, BUNCH_OF_PERMISSIONS);
 ```
 ### Handling
