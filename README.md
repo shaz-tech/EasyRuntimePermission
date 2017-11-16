@@ -35,7 +35,7 @@
 ```
 ### Handling
 ```java
-    /*call for processing only from onAllowed of PERMISSION_LISTENER_INSTANCE*/
+    /*Handle your job only from onAllowed() of PERMISSION_LISTENER_INSTANCE*/
     @Override
     public void onAllowed(int requestCode, @NonNull String[] permissions) {
           switch (requestCode) {
