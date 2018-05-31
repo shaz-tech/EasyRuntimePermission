@@ -13,7 +13,7 @@
      }
         
      dependencies {
-        	 compile 'com.github.shaz-tech:EasyRuntimePermission:1.0'
+        	 implementation 'com.github.shaz-tech:EasyRuntimePermission:1.1'
      }
 ```
 
