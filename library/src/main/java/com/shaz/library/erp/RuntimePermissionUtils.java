@@ -138,6 +138,8 @@ public final class RuntimePermissionUtils {
      * @return returns true if the Activity or Fragment has access to all given permissions.
      */
     public static boolean hasSelfPermissions(Context context, String... permissions) {
+        if (permissions == null || permissions.length < 1)
+            return false;
         for (String permission : permissions) {
             if (permissionExists(permission) && !hasSelfPermission(context, permission)) {
                 return false;
